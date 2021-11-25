@@ -13,19 +13,30 @@ source "amazon-ebs" "ubuntu" {
   region        = "eu-west-3"
   source_ami_filter {
     filters = {
-      image-id            = "ami-036d46416a34a611c"
+      image-id            = "ami-06d79c60d7454e2af"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
+
     most_recent = true
     owners      = ["099720109477"]
+
   }
   ssh_username = "ubuntu"
 }
 
 build {
-  name = "learn-packer"
+  name    = "build-nginx"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
+  
+  provisioner "shell" {
+    inline = [
+      "echo Installing nginx",
+      "sleep 30",
+      "sudo apt-get update",
+      "sudo apt-get install -y nginx",
+    ]
+  }
 }
